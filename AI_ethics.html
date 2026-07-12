@@ -1,0 +1,451 @@
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>일상 속 AI 윤리 체크 · 서초AI리터러시 강사단</title>
+<style>
+  :root{
+    --paper:#f4efe3;
+    --paper2:#ece5d4;
+    --ink:#181510;
+    --ink2:#4a4438;
+    --muted:#7d7666;
+    --accent:#ff4a1c;      /* vermilion */
+    --accent-ink:#c7350f;
+    --blue:#2338d6;        /* riso blue */
+    --good:#1f8a5b;--mid:#c98a00;--bad:#ff4a1c;
+    --font:"Pretendard","Helvetica Neue","Malgun Gothic",system-ui,sans-serif;
+    --mono:"Courier New","Courier",ui-monospace,monospace;
+    --bd:2.5px solid var(--ink);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{ -webkit-text-size-adjust:100%}
+  body{
+    font-family:var(--font);color:var(--ink);background:var(--paper);min-height:100vh;
+    background-image:
+      radial-gradient(var(--ink) 0.6px, transparent 0.7px);
+    background-size:7px 7px;
+    background-position:0 0;
+    -webkit-font-smoothing:antialiased;position:relative;
+  }
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:linear-gradient(180deg,rgba(244,239,227,.55),rgba(244,239,227,.85));}
+  .wrap{position:relative;z-index:2;max-width:760px;margin:0 auto;padding:26px 18px 60px}
+
+  /* ---- header strip ---- */
+  .head{border:var(--bd);background:var(--ink);color:var(--paper);padding:12px 16px;display:flex;align-items:center;gap:12px;
+    font-family:var(--mono);font-size:12px;letter-spacing:.5px;box-shadow:6px 6px 0 var(--accent)}
+  .head .sq{width:12px;height:12px;background:var(--accent)}
+  .head b{color:#fff;font-weight:700}
+  .head .r{margin-left:auto;color:#d9d2c2}
+
+  .panel{border:var(--bd);background:var(--paper);padding:32px 28px;margin-top:26px;
+    box-shadow:6px 6px 0 var(--ink);position:relative}
+  .panel.accent{box-shadow:6px 6px 0 var(--accent)}
+
+  /* buttons */
+  .btn{appearance:none;font-family:var(--font);font-weight:800;font-size:15px;cursor:pointer;
+    border:var(--bd);background:var(--accent);color:#fff;padding:14px 26px;letter-spacing:.3px;
+    box-shadow:4px 4px 0 var(--ink);transition:transform .1s,box-shadow .1s}
+  .btn:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 var(--ink)}
+  .btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+  .btn.dark{background:var(--ink);color:var(--paper)}
+  .btn.plain{background:var(--paper);color:var(--ink)}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:4px 4px 0 var(--ink)}
+  .hidden{display:none !important}
+
+  /* ---- landing ---- */
+  .kick{font-family:var(--mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--accent-ink);
+    border-bottom:2px solid var(--ink);display:inline-block;padding-bottom:4px;margin-bottom:18px}
+  h1.title{font-size:clamp(30px,7vw,54px);line-height:1.02;font-weight:900;letter-spacing:-1.5px;text-transform:none}
+  h1.title mark{background:var(--accent);color:#fff;padding:0 8px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+  .lead{font-size:15px;line-height:1.8;color:var(--ink2);margin-top:20px;max-width:560px}
+  .lead b{color:var(--ink);background:linear-gradient(transparent 60%,#ffd9cd 60%)}
+  .facts{display:grid;grid-template-columns:repeat(3,1fr);border:var(--bd);margin-top:26px}
+  .fact{padding:15px 14px;border-right:2px solid var(--ink)}
+  .fact:last-child{border-right:none}
+  .fact .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.5px;color:var(--muted);text-transform:uppercase}
+  .fact .v{font-size:16px;font-weight:800;margin-top:6px}
+  .fact .v small{display:block;font-size:11px;font-weight:500;color:var(--ink2);margin-top:3px}
+  .src{margin-top:22px;font-family:var(--mono);font-size:11.5px;color:var(--muted);line-height:1.9}
+  .src span{border:1.5px solid var(--ink);padding:2px 7px;margin-right:5px;display:inline-block;margin-bottom:5px;color:var(--ink2)}
+  .cta{margin-top:28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .cta .note{font-size:12.5px;color:var(--muted)}
+  .credit{margin-top:30px;border-top:2px dashed var(--ink);padding-top:16px;text-align:center;font-family:var(--mono);font-size:12px;color:var(--ink2)}
+  .credit b{color:var(--ink)}
+
+  /* ---- quiz ---- */
+  .qtop{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:14px}
+  .qidx{font-family:var(--mono);font-weight:700;font-size:15px}
+  .qidx b{font-size:40px;line-height:.8;display:block;letter-spacing:-2px}
+  .qcat{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;border:2px solid var(--ink);padding:6px 10px;background:var(--paper2)}
+  .track{display:flex;gap:4px;margin-bottom:26px}
+  .track i{height:9px;flex:1;border:1.5px solid var(--ink);background:transparent}
+  .track i.on{background:var(--accent)}
+  .track i.cur{background:var(--ink)}
+  .qtext{font-size:20px;line-height:1.5;font-weight:800;letter-spacing:-.3px}
+  .qscene{font-size:14px;line-height:1.75;color:var(--ink2);margin-top:10px;padding-left:14px;border-left:4px solid var(--accent)}
+  .opts{margin-top:24px;display:flex;flex-direction:column;gap:12px}
+  .opt{display:flex;gap:14px;align-items:center;text-align:left;cursor:pointer;font-family:var(--font);
+    border:var(--bd);background:var(--paper);padding:15px 16px;font-size:15px;line-height:1.45;color:var(--ink);
+    box-shadow:3px 3px 0 rgba(24,21,16,.18);transition:transform .1s,box-shadow .1s,background .1s}
+  .opt:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
+  .opt .mk{flex:0 0 auto;width:24px;height:24px;border:2.5px solid var(--ink);background:var(--paper);position:relative}
+  .opt .mk::after{content:"";position:absolute;inset:3px;background:var(--accent);transform:scale(0);transition:transform .12s}
+  .opt.sel{background:var(--ink);color:var(--paper);box-shadow:5px 5px 0 var(--accent)}
+  .opt.sel .mk{border-color:var(--paper)}
+  .opt.sel .mk::after{transform:scale(1)}
+  .qnav{display:flex;justify-content:space-between;margin-top:26px;gap:12px}
+
+  /* ---- result ---- */
+  .stamp{display:flex;align-items:center;gap:20px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:22px}
+  .bignum{font-size:74px;font-weight:900;line-height:.85;letter-spacing:-4px}
+  .bignum small{font-size:20px;font-weight:700;color:var(--muted);letter-spacing:0}
+  .stamp .meta2{flex:1;min-width:180px}
+  .grade-tag{font-family:var(--mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--accent-ink)}
+  .grade-title{font-size:24px;font-weight:900;letter-spacing:-.6px;margin-top:4px}
+  .relstamp{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:12px;font-weight:700;
+    border:2.5px solid var(--ink);padding:5px 12px;transform:rotate(-2deg);background:var(--paper2)}
+  .res-sub{font-size:14.5px;line-height:1.8;color:var(--ink2);margin-top:20px}
+
+  .block{margin-top:30px}
+  .block h3{font-family:var(--mono);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;
+    background:var(--ink);color:var(--paper);display:inline-block;padding:5px 11px;margin-bottom:16px}
+  .meter{margin-bottom:18px}
+  .meter .ml{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+  .meter .ml .nm{font-weight:800;font-size:15px}
+  .meter .ml .nm span{font-family:var(--mono);font-weight:500;font-size:11px;color:var(--muted);display:block;margin-top:2px}
+  .meter .ml .pc{font-family:var(--mono);font-weight:700;font-size:16px}
+  .meter .g{height:20px;border:2.5px solid var(--ink);background:repeating-linear-gradient(45deg,transparent,transparent 5px,rgba(24,21,16,.06) 5px,rgba(24,21,16,.06) 6px)}
+  .meter .g i{display:block;height:100%;width:0;background:var(--accent);transition:width .9s cubic-bezier(.4,0,.2,1)}
+
+  .acard{border:var(--bd);padding:16px 18px;margin-bottom:12px;box-shadow:4px 4px 0 rgba(24,21,16,.15)}
+  .acard .ah{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .acard .ah .an{font-weight:800;font-size:15px}
+  .acard .ah .as{font-family:var(--mono);font-size:12px;border:2px solid var(--ink);padding:2px 9px}
+  .acard.good .as{background:var(--good);color:#fff;border-color:var(--good)}
+  .acard.mid .as{background:var(--mid);color:#fff;border-color:var(--mid)}
+  .acard.bad .as{background:var(--bad);color:#fff;border-color:var(--bad)}
+  .acard p{font-size:13.5px;line-height:1.7;color:var(--ink2)}
+
+  .critical{border:var(--bd);box-shadow:4px 4px 0 rgba(24,21,16,.15);background:var(--paper2)}
+  .critical .ci{display:flex;gap:13px;padding:14px 18px;border-bottom:2px solid var(--ink);font-size:13.5px;line-height:1.65;color:var(--ink2)}
+  .critical .ci:last-child{border-bottom:none}
+  .critical .ci .n{font-family:var(--mono);font-weight:700;color:var(--accent-ink);flex:0 0 auto}
+  .critical .ci b{color:var(--ink);display:block;margin-bottom:2px}
+
+  .advice{border:var(--bd);background:var(--ink);color:var(--paper);padding:22px;box-shadow:6px 6px 0 var(--accent)}
+  .advice h4{font-size:16px;margin-bottom:10px}
+  .advice p{font-size:14px;line-height:1.85;color:#e7e0d0}
+  .advice b{color:#fff;background:var(--accent);padding:0 4px}
+
+  .res-actions{margin-top:28px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+  .foot{margin-top:24px;border-top:2px dashed var(--ink);padding-top:16px;text-align:center;font-family:var(--mono);font-size:11.5px;color:var(--ink2);line-height:1.7}
+  .foot b{color:var(--ink)}
+
+  @media (max-width:560px){.panel{padding:24px 18px}.facts{grid-template-columns:1fr}.fact{border-right:none;border-bottom:2px solid var(--ink)}.fact:last-child{border-bottom:none}}
+  @media print{body::before,body{background:#fff}.panel,.head{box-shadow:none}}
+</style>
+
+<div class="wrap">
+  <div class="head">
+    <span class="sq"></span>
+    <span>DAILY&nbsp;AI&nbsp;ETHICS&nbsp;·&nbsp;SELF-CHECK</span>
+    <span class="r"><b>서초AI리터러시 강사단</b> 제작</span>
+  </div>
+
+  <!-- ============ LANDING ============ -->
+  <section id="landing" class="panel accent">
+    <span class="kick">Everyday Dilemmas</span>
+    <h1 class="title">일상 속 <mark>AI 윤리</mark><br />체크리스트</h1>
+    <p class="lead">
+      거창한 기술 규범이 아니라, <b>우리가 매일 마주치는 순간들</b> 이야기입니다.
+      친구에게 보낼 메시지, 스마트폰 속 사진, 무심코 누른 공유 버튼 —
+      AI가 일상에 들어온 지금, 당신의 선택은 어디에 서 있을까요?
+      15가지 상황으로 <b>정직 · 타인 존중 · 책임</b> 세 가지 감각을 점검합니다.
+    </p>
+    <div class="facts">
+      <div class="fact"><div class="k">Format</div><div class="v">17문항<small>3지선다 · 약 6분</small></div></div>
+      <div class="fact"><div class="k">Reliability</div><div class="v">신뢰도 검증<small>일관성·성실도 반영</small></div></div>
+      <div class="fact"><div class="k">For</div><div class="v">성인 누구나<small>일상 생활 시나리오</small></div></div>
+    </div>
+    <div class="src">
+      BASED ON —<br />
+      <span>AI 윤리기준 (과기정통부)</span><span>OECD AI 원칙</span><span>UNESCO AI 윤리 권고</span>
+    </div>
+    <div class="cta">
+      <button class="btn" onclick="startQuiz()">체크 시작하기 →</button>
+      <span class="note">정답을 고르는 시험이 아닙니다. 솔직할수록 정확합니다.</span>
+    </div>
+    <div class="credit">본 콘텐츠는 <b>서초AI리터러시 강사단</b>이 제작하였습니다</div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section id="quiz" class="panel hidden">
+    <div class="qtop">
+      <div class="qidx">Q.<b id="qnow">01</b></div>
+      <div class="qcat" id="qcat">정직과 진정성</div>
+    </div>
+    <div class="track" id="track"></div>
+    <div class="qtext" id="qtext"></div>
+    <div class="qscene" id="qscene"></div>
+    <div class="opts" id="opts"></div>
+    <div class="qnav">
+      <button class="btn plain" id="prevBtn" onclick="prevQ()">← 이전</button>
+      <button class="btn dark" id="nextBtn" onclick="nextQ()" disabled>다음 →</button>
+    </div>
+  </section>
+
+  <!-- ============ RESULT ============ -->
+  <section id="result" class="panel hidden">
+    <div class="stamp">
+      <div class="bignum"><span id="scoreNum">0</span><small> / 100</small></div>
+      <div class="meta2">
+        <div class="grade-tag" id="gradeTag">RESULT</div>
+        <div class="grade-title" id="gradeTitle"></div>
+        <div class="relstamp" id="relStamp"></div>
+      </div>
+    </div>
+    <p class="res-sub" id="resSub"></p>
+
+    <div class="block">
+      <h3>세 가지 감각 · 영역 점수</h3>
+      <div id="meters"></div>
+    </div>
+    <div class="block">
+      <h3>영역별 해석</h3>
+      <div id="analysis"></div>
+    </div>
+    <div class="block">
+      <h3>AI를 대할 때 · 비판적으로 생각하기</h3>
+      <div class="critical">
+        <div class="ci"><span class="n">01</span><span><b>AI도 틀립니다.</b> 그럴듯하다고 사실인 것은 아닙니다. AI는 없는 정보나 출처도 자신 있게 지어낼 수 있어요(환각).</span></div>
+        <div class="ci"><span class="n">02</span><span><b>출처를 확인하세요.</b> 특히 숫자·통계·인용은 AI의 말 대신 원래 출처를 직접 찾아 눈으로 확인합니다.</span></div>
+        <div class="ci"><span class="n">03</span><span><b>교차 확인하세요.</b> 중요한 정보일수록 믿을 수 있는 다른 곳 두세 군데와 대조해 봅니다.</span></div>
+        <div class="ci"><span class="n">04</span><span><b>충격적일수록 멈추세요.</b> 감정을 강하게 자극하는 콘텐츠일수록, 공유·반응하기 전에 진위를 먼저 따집니다.</span></div>
+        <div class="ci"><span class="n">05</span><span><b>최종 판단은 나의 몫.</b> AI는 조언자일 뿐, 결정과 그 결과에 대한 책임은 사람에게 있습니다.</span></div>
+      </div>
+    </div>
+    <div class="block">
+      <h3>오늘부터 · 종합 제언</h3>
+      <div class="advice"><h4 id="adviceH"></h4><p id="adviceP"></p></div>
+    </div>
+
+    <div class="res-actions">
+      <button class="btn" onclick="location.reload()">다시 체크하기</button>
+      <button class="btn plain" onclick="window.print()">결과 저장 · 인쇄</button>
+    </div>
+    <div class="foot">
+      본 체크는 인공지능 윤리 규범을 바탕으로 한 <b>자기점검·교육용 도구</b>이며,<br/>개인의 윤리성을 공식적으로 평가·판정하지 않습니다.<br/>
+      진단 콘텐츠 제작 · <b>서초AI리터러시 강사단</b>
+    </div>
+  </section>
+</div>
+
+<script>
+/* dim: A 정직과 진정성 / B 타인 존중과 프라이버시 / C 책임과 분별력 */
+const QUESTIONS=[
+  {dim:'A',cat:'정직과 진정성',pair:'auth',
+   q:'친구 생일을 맞아, 축하 편지를 AI에게 통째로 쓰게 한 뒤 내가 직접 쓴 것처럼 전했습니다.',
+   scene:'이 상황을 어떻게 보시나요?',
+   o:[{t:'표현이 좋으면 됐지, 누가 썼는지는 중요하지 않다.',s:0},
+      {t:'AI 도움을 받되, 내 진심의 문장을 더해 마무리하는 게 낫다.',s:1},
+      {t:'초안은 참고하더라도 마음을 전하는 글은 내 말로 쓰는 것이 진정성 있다.',s:2}]},
+
+  {dim:'B',cat:'타인 존중·프라이버시',
+   q:'재미 삼아, 지인의 얼굴을 합성한 우스운 딥페이크 영상을 만들어 친구들에게 보여줬습니다.',
+   scene:'',
+   o:[{t:'웃자고 한 일이니 문제될 것 없다.',s:0},
+      {t:'널리 퍼뜨리지만 않으면 괜찮다.',s:1},
+      {t:'당사자 동의 없는 얼굴 합성은 그 사람의 인격을 침해할 수 있다.',s:2}]},
+
+  {dim:'C',cat:'책임과 분별력',
+   q:'몸이 안 좋아 AI 챗봇에 증상을 물었더니 특정 약을 권했습니다. 어떻게 하시겠어요?',
+   scene:'',
+   o:[{t:'AI가 알려줬으니 그대로 사서 복용한다.',s:0},
+      {t:'대략 맞겠거니 하고 참고만 하되 그냥 넘어간다.',s:1},
+      {t:'참고는 하되, 중요한 건강 문제는 전문가(의사·약사)에게 확인한다.',s:2}]},
+
+  {dim:'A',cat:'정직과 진정성',
+   q:'내가 운영하는 가게 평점을 올리려고, AI로 그럴듯한 손님 후기를 여러 개 지어내 올렸습니다.',
+   scene:'',
+   o:[{t:'다들 하는 마케팅이니 괜찮다.',s:0},
+      {t:'내용이 아주 거짓은 아니라면 조금은 괜찮다.',s:1},
+      {t:'실제 경험이 아닌 후기를 지어내는 것은 소비자를 속이는 일이다.',s:2}]},
+
+  {dim:'B',cat:'타인 존중·프라이버시',pair:'priv',
+   q:'친구가 내게만 보낸 사적인 사진을, 더 예쁘게 보정하려고 AI 앱에 그대로 올렸습니다.',
+   scene:'',
+   o:[{t:'내 폰에 있는 사진이니 마음대로 써도 된다.',s:0},
+      {t:'보정만 하고 지우면 상관없다.',s:1},
+      {t:'다른 사람이 담긴 사진은 그 사람의 동의를 먼저 생각해야 한다.',s:2}]},
+
+  {dim:'C',cat:'책임과 분별력',
+   q:'AI가 만들어 준 충격적인 뉴스 요약을 보고, 사실인 듯해서 단톡방에 바로 공유하려 합니다.',
+   scene:'',
+   o:[{t:'흥미로우니 일단 공유하고 본다.',s:0},
+      {t:'“카더라”라고 덧붙이면 공유해도 된다.',s:1},
+      {t:'출처와 사실 여부를 먼저 확인한 뒤에 공유할지 정한다.',s:2}]},
+
+  {dim:'B',cat:'타인 존중·프라이버시',
+   q:'길에서 마주친 낯선 사람의 사진을, AI 얼굴인식으로 신상 정보를 찾아보려 합니다.',
+   scene:'',
+   o:[{t:'궁금하니 한번 찾아본다.',s:0},
+      {t:'나쁜 의도만 아니면 괜찮다.',s:1},
+      {t:'동의 없이 타인의 신상을 캐는 것은 사생활 침해다. 하지 않는다.',s:2}]},
+
+  {dim:'A',cat:'정직과 진정성',pair:'auth',
+   q:'다음 생각에 얼마나 동의하시나요?',
+   scene:'“AI가 대신 써 준 글이라도, 내가 쓴 것처럼 말하는 건 별문제 아니다.”',
+   o:[{t:'대체로 동의한다.',s:0},
+      {t:'상황에 따라 다르다.',s:1},
+      {t:'동의하지 않는다 — 남을 속이는 상황이라면 밝히는 게 옳다.',s:2}]},
+
+  {dim:'C',cat:'책임과 분별력',
+   q:'요즘 힘든 일이 많아, 진로·이별 같은 중요한 결정을 전부 AI 챗봇에게 정해 달라고 맡깁니다.',
+   scene:'',
+   o:[{t:'AI가 더 객관적이니 시키는 대로 따른다.',s:0},
+      {t:'대부분 AI에 맡기고 나는 확인만 한다.',s:1},
+      {t:'조언은 참고하되, 내 삶의 결정은 내가 책임지고 판단한다.',s:2}]},
+
+  {dim:'B',cat:'타인 존중·프라이버시',
+   q:'가족의 목소리를 AI로 복제해, 장난 전화를 걸어 다른 가족을 놀래 주려 합니다.',
+   scene:'',
+   o:[{t:'가족끼리 장난인데 괜찮다.',s:0},
+      {t:'금방 밝히면 문제없다.',s:1},
+      {t:'목소리 복제는 오해·악용 위험이 커서, 당사자 동의 없이는 삼가야 한다.',s:2}]},
+
+  {dim:null,cat:'응답 확인',type:'attention',
+   q:'이 문항은 응답의 성실도를 확인하기 위한 문항입니다.',
+   scene:'아래에서 "가운데(두 번째)" 선택지를 골라 주세요.',
+   o:[{t:'맨 위 선택지',s:0},{t:'가운데 선택지를 선택합니다',s:2},{t:'맨 아래 선택지',s:0}]},
+
+  {dim:'B',cat:'타인 존중·프라이버시',pair:'priv',
+   q:'다음 생각에 얼마나 동의하시나요?',
+   scene:'“다른 사람의 사진이나 대화라도, 내 편의를 위해서라면 AI에 올려도 괜찮다.”',
+   o:[{t:'대체로 동의한다.',s:0},
+      {t:'상황에 따라 다르다.',s:1},
+      {t:'동의하지 않는다 — 타인의 정보는 그 사람의 동의가 먼저다.',s:2}]},
+
+  {dim:'A',cat:'정직과 진정성',
+   q:'아이가 학교 숙제를 AI로 통째로 해결하는 걸 봤습니다. 부모로서 어떤 태도가 좋을까요?',
+   scene:'',
+   o:[{t:'점수만 잘 나오면 되니 그냥 둔다.',s:0},
+      {t:'편하면 됐지 싶어 별말 하지 않는다.',s:1},
+      {t:'도구로 쓰되 스스로 배우는 부분을 지키도록 함께 기준을 정한다.',s:2}]},
+
+  {dim:'C',cat:'책임과 분별력',
+   q:'집 안 AI 스피커가 늘 켜져 대화를 듣고 있다는 걸 알게 됐습니다. 당신의 태도는?',
+   scene:'',
+   o:[{t:'편하니 신경 쓰지 않는다.',s:0},
+      {t:'찜찜하지만 딱히 알아보지는 않는다.',s:1},
+      {t:'무엇이 어떻게 수집되는지 확인하고 필요한 설정을 조정한다.',s:2}]},
+
+  {dim:'A',cat:'정직과 진정성',
+   q:'AI로 만든 그럴듯한 여행 사진을 실제로 다녀온 것처럼 SNS에 올리려 합니다.',
+   scene:'',
+   o:[{t:'보기 좋으면 됐지, 굳이 밝힐 필요 없다.',s:0},
+      {t:'묻는 사람에게만 사실대로 말하면 된다.',s:1},
+      {t:'실제가 아닌 이미지는 AI로 만든 것임을 밝히는 편이 정직하다.',s:2}]},
+
+  {dim:'C',cat:'책임과 분별력 · 팩트체크',
+   q:'AI에게 궁금한 것을 물었더니, 통계 수치와 출처까지 대며 아주 자신 있게 답했습니다.',
+   scene:'그대로 믿고 인용해도 될까요?',
+   o:[{t:'출처까지 제시했으니 사실일 것이다. 그대로 인용한다.',s:0},
+      {t:'그럴듯하니 웬만하면 믿고 넘어간다.',s:1},
+      {t:'AI는 없는 출처도 그럴듯하게 지어낼 수 있으니, 원래 출처를 직접 확인한다.',s:2}]},
+
+  {dim:'C',cat:'책임과 분별력 · 팩트체크',
+   q:'SNS에 충격적인 사건 영상이 빠르게 퍼지는데, AI로 만든 가짜일 가능성도 있어 보입니다.',
+   scene:'',
+   o:[{t:'영상이 생생하니 사실로 받아들이고 곧바로 반응한다.',s:0},
+      {t:'진짜 같아 보이면 일단 믿는다.',s:1},
+      {t:'진위가 확인되기 전까지 판단을 미루고, 신뢰할 수 있는 출처로 교차 확인한다.',s:2}]},
+];
+const DIMS={A:{name:'정직과 진정성',desc:'속이지 않기 · 내 것과 AI의 것을 밝히기'},B:{name:'타인 존중과 프라이버시',desc:'동의 · 타인의 얼굴/목소리/정보 존중'},C:{name:'책임과 분별력',desc:'맹신하지 않기 · 확인하고 스스로 판단하기'}};
+
+let cur=0;const answers=new Array(QUESTIONS.length).fill(null);
+const pad=n=>String(n).padStart(2,'0');
+/* 선택지 표시 순서를 문항마다 섞는다(채점은 선택지의 s값 기준이라 영향 없음).
+   성실도 확인 문항은 "가운데를 고르세요" 지시가 성립하도록 원래 순서를 유지한다. */
+const order=QUESTIONS.map(Q=>{const idx=Q.o.map((_,i)=>i);if(Q.type==='attention')return idx;
+  for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}return idx;});
+
+function startQuiz(){document.getElementById('landing').classList.add('hidden');document.getElementById('quiz').classList.remove('hidden');window.scrollTo({top:0});renderQ();}
+function renderQ(){
+  const Q=QUESTIONS[cur];
+  document.getElementById('qnow').textContent=pad(cur+1);
+  document.getElementById('qcat').textContent=Q.cat;
+  document.getElementById('qtext').textContent=Q.q;
+  const sc=document.getElementById('qscene');sc.textContent=Q.scene||'';sc.style.display=Q.scene?'block':'none';
+  const tr=document.getElementById('track');tr.innerHTML='';
+  QUESTIONS.forEach((_,i)=>{const b=document.createElement('i');if(i<cur)b.className='on';if(i===cur)b.className='cur';tr.appendChild(b);});
+  const box=document.getElementById('opts');box.innerHTML='';
+  order[cur].forEach(oi=>{const op=Q.o[oi];const el=document.createElement('button');el.className='opt'+(answers[cur]===oi?' sel':'');
+    el.innerHTML=`<span class="mk"></span><span>${op.t}</span>`;el.onclick=()=>{answers[cur]=oi;renderQ();};box.appendChild(el);});
+  document.getElementById('prevBtn').style.visibility=cur===0?'hidden':'visible';
+  const nb=document.getElementById('nextBtn');nb.disabled=answers[cur]===null;
+  nb.textContent=cur===QUESTIONS.length-1?'결과 보기 →':'다음 →';
+}
+function nextQ(){if(answers[cur]===null)return;if(cur===QUESTIONS.length-1){showResult();return;}cur++;renderQ();window.scrollTo({top:0});}
+function prevQ(){if(cur>0){cur--;renderQ();window.scrollTo({top:0});}}
+
+function computeResult(){
+  const dS={A:0,B:0,C:0},dM={A:0,B:0,C:0};let t=0,tm=0;
+  QUESTIONS.forEach((Q,i)=>{if(Q.type==='attention')return;const s=Q.o[answers[i]].s;dS[Q.dim]+=s;dM[Q.dim]+=2;t+=s;tm+=2;});
+  const scorePct=Math.round(t/tm*100);
+  let flags=0;const notes=[];
+  const ai=QUESTIONS.findIndex(q=>q.type==='attention');
+  if(QUESTIONS[ai].o[answers[ai]].s!==2){flags++;notes.push('성실도 확인 문항 불일치');}
+  const pairs={};QUESTIONS.forEach((Q,i)=>{if(Q.pair)(pairs[Q.pair]=pairs[Q.pair]||[]).push(i);});
+  Object.values(pairs).forEach(a=>{if(a.length===2){if(Math.abs(QUESTIONS[a[0]].o[answers[a[0]]].s-QUESTIONS[a[1]].o[answers[a[1]]].s)>=2){flags++;notes.push('유사 문항 간 응답 편차 큼');}}});
+  let rel,relC;if(flags===0){rel='높음';relC='var(--good)';}else if(flags===1){rel='보통';relC='var(--mid)';}else{rel='낮음';relC='var(--bad)';}
+  return{dS,dM,scorePct,rel,relC,notes};
+}
+const LEVELS=[
+  {min:85,tag:'LEVEL A · 성숙',title:'믿음직한 디지털 시민',sub:'AI를 편리하게 쓰면서도 정직함과 타인에 대한 배려, 스스로 판단하는 책임감을 잃지 않습니다. 주변 사람들에게 좋은 기준이 되어 줄 수 있는 태도입니다.'},
+  {min:70,tag:'LEVEL B · 견실',title:'중심이 잡힌 사용자',sub:'대부분의 상황에서 올바른 방향을 알고 있습니다. 편리함과 옳음이 부딪히는 순간에 잠깐 멈춰 생각하는 습관을 더하면 한결 단단해집니다.'},
+  {min:50,tag:'LEVEL C · 성장 중',title:'조금만 더, 성장 중',sub:'기본 감각은 있지만, 일부 상황에서 편리함 쪽으로 마음이 기웁니다. “이게 누군가에게 피해가 될까?”를 한 번 더 떠올려 보세요.'},
+  {min:0,tag:'LEVEL D · 점검 필요',title:'습관을 점검할 때',sub:'AI를 편하게 쓰는 데 익숙하지만, 정직·타인 존중·책임의 신호를 놓치는 순간이 보입니다. 실제 사례로 하나씩 감각을 다져 보길 권합니다.'},
+];
+function showResult(){
+  const R=computeResult();
+  document.getElementById('quiz').classList.add('hidden');document.getElementById('result').classList.remove('hidden');window.scrollTo({top:0});
+  const lvl=LEVELS.find(l=>R.scorePct>=l.min);
+  document.getElementById('gradeTag').textContent=lvl.tag;
+  document.getElementById('gradeTitle').textContent=lvl.title;
+  document.getElementById('resSub').textContent=lvl.sub;
+  const rs=document.getElementById('relStamp');rs.textContent='응답 신뢰도 · '+R.rel;rs.style.borderColor=R.relC;rs.style.color=R.rel==='높음'?'var(--ink)':R.relC;
+  animateNum(document.getElementById('scoreNum'),R.scorePct,1200);
+  buildMeters(R);buildAnalysis(R);buildAdvice(R);
+}
+function animateNum(el,to,dur){const st=performance.now();(function tick(now){const p=Math.min(1,(now-st)/dur);el.textContent=Math.round(to*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(tick);})(performance.now());}
+function buildMeters(R){
+  const box=document.getElementById('meters');box.innerHTML='';
+  ['A','B','C'].forEach(k=>{const pct=Math.round(R.dS[k]/R.dM[k]*100);
+    const el=document.createElement('div');el.className='meter';
+    el.innerHTML=`<div class="ml"><div class="nm">${DIMS[k].name}<span>${DIMS[k].desc}</span></div><div class="pc">${pct}%</div></div><div class="g"><i></i></div>`;
+    box.appendChild(el);const bar=el.querySelector('.g i');
+    bar.style.background=pct<50?'var(--bad)':pct<75?'var(--mid)':'var(--good)';
+    setTimeout(()=>{bar.style.width=pct+'%';},250);});
+}
+const CM={
+  A:{good:'정직함이 몸에 배어 있습니다. AI의 도움과 내 진짜 생각을 구분해 밝히고, 남을 속이지 않으려는 감각이 분명합니다.',mid:'대체로 정직하려 하지만, 편할 때 “이 정도는 괜찮겠지” 하고 넘어가는 순간이 있습니다. 밝힐지 말지 애매할 땐 밝히는 쪽을 택해 보세요.',bad:'편리함이 정직함보다 앞서는 선택이 보입니다. AI가 만든 것과 내 것을 솔직히 구분하는 습관을 들여 보세요.'},
+  B:{good:'타인의 얼굴·목소리·정보를 함부로 다루지 않고, 동의를 먼저 떠올립니다. 배려의 감각이 잘 잡혀 있습니다.',mid:'대체로 타인을 존중하지만, “나만 편하면” 하는 상황에서 선이 흐려질 수 있습니다. 상대의 입장을 한 번 더 떠올려 보세요.',bad:'타인의 사진·목소리·사생활에 대한 경계가 느슨한 편입니다. “내가 저 사람이라면?”을 기준으로 삼아 보세요.'},
+  C:{good:'AI를 맹신하지 않고, 확인하고 스스로 판단하는 힘이 있습니다. AI도 틀리거나 없는 사실을 지어낼 수 있다는 걸 알고, 정보와 조언을 건강한 거리에서 다룹니다.',mid:'분별력의 방향은 알지만, 급하거나 흥미로울 때 확인을 건너뛰기도 합니다. 특히 숫자·출처·충격적인 콘텐츠는 공유·결정 전에 “정말일까?”를 한 번 더 따져 보세요.',bad:'AI가 준 정보나 판단을 그대로 받아들이는 경향이 있습니다. AI는 없는 사실도 자신 있게 말할 수 있으니, 건강·돈·중요한 결정은 반드시 다른 출처로 교차 확인하세요.'},
+};
+function buildAnalysis(R){
+  const box=document.getElementById('analysis');box.innerHTML='';
+  if(R.rel!=='높음'){const c=document.createElement('div');c.className='acard '+(R.rel==='낮음'?'bad':'mid');
+    c.innerHTML=`<div class="ah"><span class="an">응답 신뢰도 · ${R.rel}</span><span class="as">참고</span></div><p>${R.notes.join(' / ')} 이(가) 감지되었습니다. 결과는 참고용으로 보시고, 시간을 두고 다시 응답해 보시길 권합니다.</p>`;box.appendChild(c);}
+  ['A','B','C'].forEach(k=>{const pct=Math.round(R.dS[k]/R.dM[k]*100);let band='good',label='좋음',txt=CM[k].good;
+    if(pct<50){band='bad';label='점검 필요';txt=CM[k].bad;}else if(pct<75){band='mid';label='보통';txt=CM[k].mid;}
+    const c=document.createElement('div');c.className='acard '+band;
+    c.innerHTML=`<div class="ah"><span class="an">${DIMS[k].name}</span><span class="as">${pct}% · ${label}</span></div><p>${txt}</p>`;box.appendChild(c);});
+}
+function buildAdvice(R){
+  const p={A:R.dS.A/R.dM.A,B:R.dS.B/R.dM.B,C:R.dS.C/R.dM.C};
+  const weak=Object.keys(p).sort((a,b)=>p[a]-p[b])[0],strong=Object.keys(p).sort((a,b)=>p[b]-p[a])[0];
+  const map={A:'“이건 내 생각일까, AI가 만든 걸까?”를 스스로 밝히는 습관',B:'“상대가 이 사진·목소리·정보를 이렇게 쓰는 걸 알면 괜찮아할까?”라는 물음',C:'공유하거나 결정하기 전에 “정말 사실일까? 내가 판단한 게 맞나?”라는 한 번의 멈춤'};
+  document.getElementById('adviceH').textContent=`강점은 ‘${DIMS[strong].name}’, 먼저 챙길 부분은 ‘${DIMS[weak].name}’`;
+  document.getElementById('adviceP').innerHTML=`거창한 규칙이 아니라 작은 습관 하나면 됩니다. 앞으로 <b>${map[weak]}</b> 을(를) 일상에서 떠올려 보세요. AI는 정말 편리한 도구이지만, 그 편리함이 나의 정직함, 다른 사람에 대한 배려, 스스로 판단할 책임을 대신해 주지는 않습니다. 오늘의 작은 선택들이 모여 ‘믿을 수 있는 디지털 시민’을 만듭니다. — 함께 배우는 콘텐츠, <b>서초AI리터러시 강사단</b>.`;
+}
+</script>
